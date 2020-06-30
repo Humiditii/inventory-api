@@ -6,7 +6,7 @@ class StoreController {
 
         const {name, price, quantity} = req.body;
         const {userId} = req;
-        console.log(userId)
+       // console.log(userId)
         const totalPrice = quantity * price;
 
         Store.findOne({name:name}).then( result => {
@@ -68,7 +68,8 @@ class StoreController {
         console.log(userId)
         Store.find({admin:userId}).then(result => {
             if(result.length == 0){
-                return res.status(200).json({
+                return res.status(404).json({
+                    statusCode: 404,
                     message: 'No Product Yet!!!'
                 })
             }else{
