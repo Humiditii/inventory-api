@@ -46,6 +46,21 @@ class SaleController {
 
     }
 
+
+    static getProductList(req, res, next){
+        const {userId} = req;
+        Store.find({admin:userId}).then( result => {
+           // console.log(result)
+            const data = result.map( (item) => [item.name, item._id] )
+
+            return res.status(200).json({
+                data: data ? data : 'No Product, Please Add'
+            })
+        }).catch( err=> {
+            return Util.appError(err, next);
+        })
+    }
+
     static viewSales(req, res, next){
         const {userId} = req;
 
