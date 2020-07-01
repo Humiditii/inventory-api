@@ -83,6 +83,14 @@ class AuthController {
     }
     static async forgetPassword(req, res, next){
 
+        const {email} = req.body;
+
+        Auth.findOne({email:email}).then( user => {
+
+        }).catch( err=> {
+            return Util.appError(err, next)
+        })
+
     }
 
     static resetPassword(req, res, next){

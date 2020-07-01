@@ -49,18 +49,41 @@ class SaleController {
     static viewSales(req, res, next){
         const {userId} = req;
 
-        const {date} = req.body;
+        const {startDate, endDate} = req.body;
 
-        const defaultDate = date ? date : Date.now();
+        const defaultDate = Date.now();
 
-        Sale.find({dateSold : defaultDate}).then( result => {
-            console.log(defaultDate)
-            res.status(200).json({
-                data: result
-            })
-        }).catch( err => {4
-            return Util.appError(err, next);
-        });
+        if(startDate == null && endDate == null){
+            Sale.find({dateSold:{$lt: new Date(defaultDate) }, seller: userId}).then( result => {
+                console.log(new Date(defaultDate))
+                if(result.length === 0){
+                    return res.status(404).json({
+                        message: 'No Sales record'
+                    })
+                }else{
+                    res.status(200).json({
+                        data: result
+                    })
+                }
+            }).catch( err => {
+                return Util.appError(err, next);
+            });
+        }else{
+            Sale.find({dateSold:{$lt: new Date(defaultDate) }, seller: userId}).then( result => {
+                console.log(new Date(defaultDate))
+                if(result.length === 0){
+                    return res.status(404).json({
+                        message: 'No Sales record'
+                    })
+                }else{
+                    res.status(200).json({
+                        data: result
+                    })
+                }
+            }).catch( err => {
+                return Util.appError(err, next);
+            });
+        }
     }
 }
 

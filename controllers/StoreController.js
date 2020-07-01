@@ -46,12 +46,12 @@ class StoreController {
 
         Store.findById(productId).then( productGotten => {
 
-            productGotten.price = price;
+            productGotten.price = Number(price);
             productGotten.quantity = Number(quantity);
-            productGotten.totalPrice = price * productGotten.quantity;
+            productGotten.totalPrice = productGotten.price * productGotten.quantity;
             productGotten.save().then( edited=> {
                 return res.status(201).json({
-                    message: 'Updated'
+                    message: 'Product Updated'
                 })
             })
 
