@@ -65,7 +65,7 @@ class StoreController {
 
     static getProducts(req, res, next){
         const {userId} = req;
-        console.log(userId)
+        //console.log(userId)
         Store.find({admin:userId}).then(result => {
             if(result.length == 0){
                 return res.status(404).json({

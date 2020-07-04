@@ -86,7 +86,8 @@ class AuthController {
         const {email} = req.body;
 
         Auth.findOne({email:email}).then( user => {
-
+            user.resetPassword.token = Util.randomStr();
+            user.resetPassword.expiryDte = Date.now()
         }).catch( err=> {
             return Util.appError(err, next)
         })
