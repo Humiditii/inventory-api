@@ -74,7 +74,6 @@ class SaleController {
                 $gte:new Date (new Date(defaultDate).setHours(0,0,0)),
                 $lt: new Date( new Date(defaultDate).setHours(23,59,59))
             } , seller: userId}).then( result => {
-               // console.log(new Date(defaultDate))
                 if(result.length === 0){
                     return res.status(404).json({
                         message: 'No Sales record'
