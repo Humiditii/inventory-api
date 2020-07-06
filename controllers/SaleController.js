@@ -49,7 +49,9 @@ class SaleController {
 
     static getProductList(req, res, next){
         const {userId} = req;
-        Store.find({admin:userId}).then( result => {
+        Store.find({admin:userId, quantity: {
+            $gte: 1
+        }}).then( result => {
            // console.log(result)
             const data = result.map( (item) => [item.name, item._id, item.quantity] )
 
