@@ -4,7 +4,7 @@ import Util from '../utils/Utility';
 class StoreController {
     static addProduct(req, res, next){
 
-        const {name, price, quantity} = req.body;
+        const {name, price, quantity, cost} = req.body;
         const {userId} = req;
        // console.log(userId)
         const totalPrice = quantity * price;
@@ -20,7 +20,8 @@ class StoreController {
                     price: price,
                     quantity: quantity,
                     totalPrice: totalPrice,
-                    admin: userId
+                    admin: userId,
+                    cost: cost
                 });
 
                 saveProduct.save().then( saved => {
@@ -42,14 +43,14 @@ class StoreController {
 
         const{userId} = req;
         const{productId} = req.params;
-        const { quantity, price } = req.body;
+        const { quantity, price, productName } = req.body;
 
         Store.findById(productId).then( productGotten => {
-
-            productGotten.price = Number(price);
+            productGotten.name = productName
+            productGotten.price += Number(price);
             productGotten.quantity = Number(quantity);
             productGotten.totalPrice = productGotten.price * productGotten.quantity;
-            productGotten.save().then( edited=> {
+            productGotten.save().then( edited => {
                 return res.status(201).json({
                     message: 'Product Updated'
                 })
@@ -80,6 +81,18 @@ class StoreController {
         }).catch(err => {
             return Util.appError(err, next)
         });
+    }
+
+    static deleteProduct(req, res, next){
+        const {productId} = req.params;
+
+        Store.findOneAndDelete(productId).then( deleted=> {
+            return res.status(200).json({
+                message: 'Product Deleted'
+            })
+        }).catch( err => {
+            return Util.appError(err, next);
+        })
     }
 }
 
