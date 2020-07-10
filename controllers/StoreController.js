@@ -43,11 +43,12 @@ class StoreController {
 
         const{userId} = req;
         const{productId} = req.params;
-        const { quantity, price, productName } = req.body;
+        const { quantity, price, productName, cost } = req.body;
 
         Store.findById(productId).then( productGotten => {
             productGotten.name = productName
             productGotten.price = Number(price);
+            productGotten.cost = Number(cost);
             productGotten.quantity += Number(quantity);
             productGotten.totalPrice = productGotten.price * productGotten.quantity;
             productGotten.save().then( edited => {
