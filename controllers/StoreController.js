@@ -87,7 +87,7 @@ class StoreController {
     static deleteProduct(req, res, next){
         const {productId} = req.params;
         
-        Store.findByIdAndRemove(productId).then( deleted=> {
+        Store.findOneAndDelete(productId).then( deleted=> {
             return res.status(200).json({
                 message: 'Product Deleted'
             })
