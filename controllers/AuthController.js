@@ -56,12 +56,14 @@ class AuthController {
             const getUserIfExist = await Auth.findOne({businessname:businessName});
 
             if(!getUserIfExist){
-                return res.status(400).json({
+                return res.json({
+                    statusCode:400,
                     message: 'User does not exist'
                 })
             }else{
                 if(!Util.decodePwd(password, getUserIfExist.password)){
                     return res.status(401).json({
+                        statusCode: 401,
                         message:'Invalid Password'
                     })
                 }else{
@@ -80,6 +82,15 @@ class AuthController {
 
     }
     static async forgetPassword(req, res, next){
+
+        const {email} = req.body;
+
+        Auth.findOne({email:email}).then( user => {
+            user.resetPassword.token = Util.randomStr();
+            user.resetPassword.expiryDte = Date.now()
+        }).catch( err=> {
+            return Util.appError(err, next)
+        })
 
     }
 

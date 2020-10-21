@@ -14,7 +14,7 @@ const app = express();
 // Connection object which contains the constant for the port and the database
 let connection_config = {
     port: process.env.PORT,
-    database_url: process.env.MONGODB_URI
+    database_url: process.env.MONGODB_ATLAS
 }
 
 if( process.env.NODE_ENV == 'development'){

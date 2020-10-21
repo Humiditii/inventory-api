@@ -12,6 +12,9 @@ const stroeSchema = new Schema({
         required: true
     },
 
+    cost: {
+        type: Number
+    },
     quantity: {
         type: Number,
         required: true

@@ -4,9 +4,9 @@ import Util from '../utils/Utility';
 class StoreController {
     static addProduct(req, res, next){
 
-        const {name, price, quantity} = req.body;
+        const {name, price, quantity, cost} = req.body;
         const {userId} = req;
-        console.log(userId)
+       // console.log(userId)
         const totalPrice = quantity * price;
 
         Store.findOne({name:name}).then( result => {
@@ -20,7 +20,8 @@ class StoreController {
                     price: price,
                     quantity: quantity,
                     totalPrice: totalPrice,
-                    admin: userId
+                    admin: userId,
+                    cost: cost
                 });
 
                 saveProduct.save().then( saved => {
@@ -42,16 +43,17 @@ class StoreController {
 
         const{userId} = req;
         const{productId} = req.params;
-        const { quantity, price } = req.body;
+        const { quantity, price, productName, cost } = req.body;
 
         Store.findById(productId).then( productGotten => {
-
-            productGotten.price = price;
-            productGotten.quantity = Number(quantity);
-            productGotten.totalPrice = price * productGotten.quantity;
-            productGotten.save().then( edited=> {
+            productGotten.name = productName
+            productGotten.price = Number(price);
+            productGotten.cost = Number(cost);
+            productGotten.quantity += Number(quantity);
+            productGotten.totalPrice = productGotten.price * productGotten.quantity;
+            productGotten.save().then( edited => {
                 return res.status(201).json({
-                    message: 'Updated'
+                    message: 'Product Updated'
                 })
             })
 
@@ -65,10 +67,11 @@ class StoreController {
 
     static getProducts(req, res, next){
         const {userId} = req;
-        console.log(userId)
+        //console.log(userId)
         Store.find({admin:userId}).then(result => {
             if(result.length == 0){
-                return res.status(200).json({
+                return res.status(404).json({
+                    statusCode: 404,
                     message: 'No Product Yet!!!'
                 })
             }else{
@@ -79,6 +82,18 @@ class StoreController {
         }).catch(err => {
             return Util.appError(err, next)
         });
+    }
+
+    static deleteProduct(req, res, next){
+        const {productId} = req.params;
+        
+        Store.findOneAndDelete(productId).then( deleted=> {
+            return res.status(200).json({
+                message: 'Product Deleted'
+            })
+        }).catch( err => {
+            return Util.appError(err, next);
+        })
     }
 }
 
