@@ -10,10 +10,10 @@ class Connection {
             //console.log(connection)
             if(app){
                 app.listen(connection_config.port, () => {
-                    console.log('Server running at ' + connection_config.port);
+                    console.log('<<<<<=======Server running at ' + connection_config.port+'======>>>>>>');
                 });
             }else{
-                console.log('<<<<<<<<<=======Database Connected=======================>>>>>>>>>>>>>>>>>>>')
+                console.log('<<<<<<<<<=======Database Connected=======================>>>>>>>>>>>>>>>>')
             }
         }).catch( err => {
             throw err;
@@ -22,6 +22,15 @@ class Connection {
 
     static disconnect(){
         return mongoose.disconnect()
+    }
+
+    static mocker(body, model){
+       const M = require(`./models/${model}`)
+        M.findOneAndDelete(body).then( deleted => {
+            console.log('Cleared')
+        }).catch( err => {
+            console.log(err.message)
+        })
     }
 }
 

@@ -1,40 +1,24 @@
-// const chai = require('chai');
-// const chaiHttp = require('chai-http')
-// const app = require('../app');
-
-// chai.should()
-
-// chai.use(chaiHttp)
-
-
-// describe( 'Tasks Api', ()=> {
-//     // testing the get route
-//     describe('GET /api/tasks ', () => {
-//         it('It should get all tasks', (done)=> {
-//             chai.request(app).get('/api/tasks').end( (err, response) => {
-//                 response.should.have.status(200);
-//                 response.body.should.be.a('array');
-//                 response.body.length.should.be.eq(3);
-//             done()
-//             })
-//         })
-//     })
-
-//     // testing the post route
-
-
-//     // testing the post route
-
-
-//     // testing the patch route
-// })
-
-
 import {expect} from 'chai'
 import request from 'supertest';
+import db_connection from '../conn'
+import dotenv from 'dotenv';
+
+dotenv.config()
+
+const {mocker, connect, disconnect} = db_connection
 
 import app from '../app';
 
+const signup = {
+    businessName: 'Hameed',
+    email: 'hameed@gmail.com',
+    password:'hameed'
+}
+
+const connection_config = {
+    port: 3333,
+    database_url: process.env.DATABASE_URL
+}
 
 describe('Get all tasks', ()=> {
     it('shoduld get all routes', (done)=>{
@@ -45,5 +29,37 @@ describe('Get all tasks', ()=> {
         }).catch( err => {
             done(err)
         } )
+    })
+})
+
+describe('Working with mongoose', ()=> {
+    describe('Sign up new User', ()=>{
+        before((done)=>{
+            connect(connection_config).then(()=> done()).catch( err => done(err))
+            // mocker(signup, 'auth')
+        })
+
+        after((done)=>{
+            disconnect().then(()=> done() ).catch( err => done(err))
+        })
+        it('Should sign new user', (done)=> {
+            request(app).post('/api/v1/auth/signup')
+            .send(signup).then( (res)=> {
+                const {body} = res
+                expect(body).to.contain.property('message');
+                done()
+            }).catch( err => done(err))
+        })
+
+        it('should check if email exists', (done)=>{
+            request(app).post('/api/v1/auth/signup')
+            .send(signup).then ( res => {
+                console.log(res)
+                const {body} = res
+                expect(body).to.contain.property('message')
+                // expect(bod)
+                done()
+            }).catch( err=> done(err))
+        })
     })
 })
