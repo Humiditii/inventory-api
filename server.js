@@ -1,6 +1,8 @@
-import mongoose from 'mongoose';
 import app from './app';
 import dotenv from 'dotenv';
+import db_connection from './conn';
+
+const {connect, disconnect} = db_connection;
 
 dotenv.config()
 
@@ -17,15 +19,5 @@ if( process.env.NODE_ENV == 'development'){
     
 }
 
-mongoose.connect( connection_config.database_url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex:true
-}).then( connection => {
-    //console.log(connection)
-    app.listen(connection_config.port, () => {
-        console.log('Server running at ' + connection_config.port);
-    });
-}).catch( err => {
-    throw err;
-})
+connect(connection_config, app)
+
