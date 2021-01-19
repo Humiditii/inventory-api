@@ -4,7 +4,7 @@
   "description": "To manage stocks",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --recursive --require babel-polyfill --require babel-register --exit ",
     "dev": "nodemon --exec babel-node server.js",
     "start": "babel-node server.js",
     "kill": "killall -9 node"
@@ -30,6 +30,12 @@
     "nodemailer-sendgrid-transport": "^0.2.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "babel-polyfill": "^6.26.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.1",
+    "mockgoose": "^8.0.4",
+    "nodemon": "^2.0.4",
+    "supertest": "^6.1.1"
   }
 }
